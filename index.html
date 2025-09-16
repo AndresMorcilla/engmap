@@ -14,8 +14,9 @@
     ; backdrop-filter: blur(6px); border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.25);} 
     .popup-img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; margin-bottom: 6px; }
     .quiz-btn { padding: 6px 10px; margin: 3px; border-radius: 8px; border: none; cursor: pointer; background:#0f172a; color:white; font-size:0.85rem; transition: background 0.2s; }
-    .quiz-btn:hover { background:#2f4f7b; }
+    .quiz-btn:hover { background:#ffffff; color:black;}
     .result { margin-top: 6px; font-weight: 600; text-align:center; }
+    .backquestion { background-color: rgba(0, 0, 0, 0.433); border-radius: 20px; padding: 5px;}
   </style>
 </head>
 <body>
@@ -87,11 +88,12 @@
           <img class=\"popup-img\" src=\"${place.img}\" alt=\"${place.title}\">
           <strong>${place.title}</strong>
           <p style=\"white-space:pre-wrap; font-size:0.85rem; margin-top:4px\">${place.info}</p>
-          <hr>
-          <div style=\"font-size:1rem; margin-top:6px; font-weight:500; color: yellow;\">${place.question}</div>
+          <hr> <div class="backquestion">
+          <div style=\"font-size:1rem; margin-top:6px; font-weight:500; color: white; text-shadow: #ccc 1px 0 10px; text-align:center;\">${place.question}</div>
           <div style=\"margin-top:6px; text-align:center\">
             <button class=\"quiz-btn\" data-correct=\"${place.answer}\" onclick=\"handleAnswer(event,this)\">Yes</button>
             <button class=\"quiz-btn\" data-correct=\"${place.answer}\" onclick=\"handleAnswer(event,this)\">No</button>
+          </div>
           </div>
           <div class=\"result\" id=\"res-${place.id}\"></div>
         </div>
@@ -126,5 +128,3 @@
   </script>
 </body>
 </html>
-
-
