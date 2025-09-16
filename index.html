@@ -15,7 +15,7 @@
     .popup-img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; margin-bottom: 6px; }
     .quiz-btn { padding: 6px 10px; margin: 3px; border-radius: 8px; border: none; cursor: pointer; background:#0f172a; color:white; font-size:0.85rem; transition: background 0.2s; }
     .quiz-btn:hover { background:#ffffff; color:black;}
-    .result { margin-top: 6px; font-weight: 600; text-align:center; }
+    .result { margin-top: 6px; font-weight: 600; text-align:center; color:white; text-shadow: #ffffff 1px 0 10px; }
     .backquestion { background-color: rgba(0, 0, 0, 0.433); border-radius: 20px; padding: 5px;}
   </style>
 </head>
@@ -111,10 +111,10 @@
       const res = btn.closest('.leaflet-popup-content').querySelector('.result');
       if(userAnswer === isCorrect){
         res.textContent = '✔ Correct';
-        res.style.color = 'green';
+        res.style.textShadow = 'green 1px 0 10px';
       } else {
         res.textContent = '✘ Wrong';
-        res.style.color = 'crimson';
+        res.style.textShadow = 'red 1px 0 10px';
       }
     }
 
