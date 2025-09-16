@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>City Stories — Present Perfect Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <style>
+    body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; margin:0; background: linear-gradient(135deg,#f1f5f9,#e2e8f0); }
+    #map { height: 100vh; width: 100%; }
+    header { position:absolute; top:0; left:0; right:0; padding: 0.8rem 1rem; background: rgba(15,23,42,0.6); color: white; backdrop-filter: blur(6px); z-index:1000; }
+    header h1 { margin:0; font-size: 1.2rem; }
+    .leaflet-popup-content-wrapper { background: rgba(15, 23, 42, 0.347); color: white; backdrop-filter: blur(6px); z-index:1000;
+    ; backdrop-filter: blur(6px); border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.25);} 
+    .popup-img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; margin-bottom: 6px; }
+    .quiz-btn { padding: 6px 10px; margin: 3px; border-radius: 8px; border: none; cursor: pointer; background:#0f172a; color:white; font-size:0.85rem; transition: background 0.2s; }
+    .quiz-btn:hover { background:#2f4f7b; }
+    .result { margin-top: 6px; font-weight: 600; text-align:center; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Italy — Present Perfect Map</h1>
+  </header>
+
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([41.9, 12.5], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const places = [
+      {
+        id: 'colosseum',
+        title: 'The Roman Colosseum',
+        coords: [41.8902, 12.4922],
+        img: 'coliseo.jpg',
+        info: `Location: Rome, Lazio region.\nHistory: Inaugurated in AD 80; hosted gladiator games and spectacles.\nFun fact: It could be emptied in 10–15 minutes.`,
+        question: 'Has it been inaugurated in the 1st century AD?',
+        answer: true
+      },
+      {
+        id: 'venice',
+        title: 'Venice',
+        coords: [45.4408, 12.3155],
+        img: 'coso2.jpg',
+        info: `Location: Veneto region.\nHistory: A maritime republic and trading hub.\nFun fact: St Mark's Square often floods during high tides.`,
+        question: 'Is it built on 118 islands?',
+        answer: true
+      },
+      {
+        id: 'santangelo',
+        title: "Castel Sant'Angelo",
+        coords: [41.9031, 12.4663],
+        img: 'santangelo.webp',
+        info: `Location: Rome, near the Tiber and the Vatican.\nHistory: Originally Hadrian's Mausoleum; later papal fortress and prison.\nFun fact: Named after a vision of Archangel Michael.`,
+        question: 'Was it originally a mausoleum?',
+        answer: true
+      },
+      {
+        id: 'casteldelmonte',
+        title: 'Castel del Monte',
+        coords: [41.0436, 16.2917],
+        img: 'castelMonte.webp',
+        info: `Location: Andria, Apulia.\nHistory: Built by Frederick II in the 13th century.\nFun fact: Famous for its perfect octagonal design.`,
+        question: 'Does it have an octagonal shape?',
+        answer: true
+      },
+      {
+        id: 'genoa',
+        title: 'Genoa',
+        coords: [44.4056, 8.9463],
+        img: 'genoa.jpeg',
+        info: `Location: Liguria.\nHistory: A major maritime republic; birthplace of Columbus.\nFun fact: Its historic center is one of Europe's largest.`,
+        question: 'Was it one of the Italian Maritime Republics?',
+        answer: true
+      }
+    ];
+
+    function makePopup(place){
+      return `
+        <div style=\"width:240px\">
+          <img class=\"popup-img\" src=\"${place.img}\" alt=\"${place.title}\">
+          <strong>${place.title}</strong>
+          <p style=\"white-space:pre-wrap; font-size:0.85rem; margin-top:4px\">${place.info}</p>
+          <hr>
+          <div style=\"font-size:0.9rem; margin-top:6px; font-weight:500\">${place.question}</div>
+          <div style=\"margin-top:6px; text-align:center\">
+            <button class=\"quiz-btn\" data-correct=\"${place.answer}\" onclick=\"handleAnswer(event,this)\">Yes</button>
+            <button class=\"quiz-btn\" data-correct=\"${place.answer}\" onclick=\"handleAnswer(event,this)\">No</button>
+          </div>
+          <div class=\"result\" id=\"res-${place.id}\"></div>
+        </div>
+      `;
+    }
+
+    places.forEach(p => {
+      L.marker(p.coords).addTo(map).bindPopup(makePopup(p), {maxWidth: 280});
+    });
+
+    window.handleAnswer = function(ev, btn){
+      ev.stopPropagation();
+      const isCorrect = (btn.getAttribute('data-correct') === 'true');
+      const userAnswer = btn.textContent.trim().toLowerCase() === 'yes';
+      const res = btn.closest('.leaflet-popup-content').querySelector('.result');
+      if(userAnswer === isCorrect){
+        res.textContent = '✔ Correct';
+        res.style.color = 'green';
+      } else {
+        res.textContent = '✘ Wrong';
+        res.style.color = 'crimson';
+      }
+    }
+
+    map.on('popupopen', e => {
+      const res = e.popup._container.querySelector('.result');
+      if(res) res.textContent = '';
+    });
+
+    const group = L.featureGroup(places.map(p => L.marker(p.coords)));
+    map.fitBounds(group.getBounds().pad(0.4));
+  </script>
+</body>
+</html>
